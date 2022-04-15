@@ -1,0 +1,1 @@
+/home/vhosts/villamos.vein.hu/components/com_fireboard/template/index.php

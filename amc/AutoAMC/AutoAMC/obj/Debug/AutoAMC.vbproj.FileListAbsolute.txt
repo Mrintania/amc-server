@@ -1,0 +1,43 @@
+C:\Users\Administrator\Documents\Visual Studio 2008\Projects\AutoAMC\AutoAMC\bin\Debug\AutoAMC.exe
+C:\Users\Administrator\Documents\Visual Studio 2008\Projects\AutoAMC\AutoAMC\bin\Debug\AutoAMC.pdb
+C:\Users\Administrator\Documents\Visual Studio 2008\Projects\AutoAMC\AutoAMC\bin\Debug\AutoAMC.xml
+C:\Users\Administrator\Documents\Visual Studio 2008\Projects\AutoAMC\AutoAMC\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Administrator\Documents\Visual Studio 2008\Projects\AutoAMC\AutoAMC\obj\Debug\AutoAMC.Form1.resources
+C:\Users\Administrator\Documents\Visual Studio 2008\Projects\AutoAMC\AutoAMC\obj\Debug\AutoAMC.Resources.resources
+C:\Users\Administrator\Documents\Visual Studio 2008\Projects\AutoAMC\AutoAMC\obj\Debug\AutoAMC.vbproj.GenerateResource.Cache
+C:\Users\Administrator\Documents\Visual Studio 2008\Projects\AutoAMC\AutoAMC\obj\Debug\AutoAMC.exe
+C:\Users\Administrator\Documents\Visual Studio 2008\Projects\AutoAMC\AutoAMC\obj\Debug\AutoAMC.xml
+C:\Users\Administrator\Documents\Visual Studio 2008\Projects\AutoAMC\AutoAMC\obj\Debug\AutoAMC.pdb
+D:\Project\AutoAMC\AutoAMC\obj\Debug\AutoAMC.exe
+D:\Project\AutoAMC\AutoAMC\obj\Debug\AutoAMC.xml
+D:\Project\AutoAMC\AutoAMC\obj\Debug\AutoAMC.pdb
+D:\Project\AutoAMC\AutoAMC\bin\Debug\AutoAMC.exe
+D:\Project\AutoAMC\AutoAMC\bin\Debug\AutoAMC.pdb
+D:\Project\AutoAMC\AutoAMC\bin\Debug\AutoAMC.xml
+D:\Project\AutoAMC\AutoAMC\obj\Debug\ResolveAssemblyReference.cache
+D:\Project\AutoAMC\AutoAMC\obj\Debug\AutoAMC.Form1.resources
+D:\Project\AutoAMC\AutoAMC\obj\Debug\AutoAMC.Resources.resources
+D:\Project\AutoAMC\AutoAMC\obj\Debug\AutoAMC.vbproj.GenerateResource.Cache
+D:\amci\AutoAMC\AutoAMC\obj\Debug\AutoAMC.exe
+D:\amci\AutoAMC\AutoAMC\obj\Debug\AutoAMC.xml
+D:\amci\AutoAMC\AutoAMC\obj\Debug\AutoAMC.pdb
+D:\amci\AutoAMC\AutoAMC\bin\Debug\AutoAMC.exe
+D:\amci\AutoAMC\AutoAMC\bin\Debug\AutoAMC.pdb
+D:\amci\AutoAMC\AutoAMC\bin\Debug\AutoAMC.xml
+D:\amci\AutoAMC\AutoAMC\obj\Debug\ResolveAssemblyReference.cache
+D:\amci\AutoAMC\AutoAMC\obj\Debug\AutoAMC.Form1.resources
+D:\amci\AutoAMC\AutoAMC\obj\Debug\AutoAMC.Resources.resources
+D:\amci\AutoAMC\AutoAMC\obj\Debug\AutoAMC.vbproj.GenerateResource.Cache
+D:\Project\amci\AutoAMC\AutoAMC\obj\Debug\AutoAMC.exe
+D:\Project\amci\AutoAMC\AutoAMC\obj\Debug\AutoAMC.xml
+D:\Project\amci\AutoAMC\AutoAMC\obj\Debug\AutoAMC.pdb
+D:\Project\amci\AutoAMC\AutoAMC\bin\Debug\AutoAMC.exe
+D:\Project\amci\AutoAMC\AutoAMC\bin\Debug\AutoAMC.pdb
+D:\Project\amci\AutoAMC\AutoAMC\bin\Debug\AutoAMC.xml
+D:\Project\amci\AutoAMC\AutoAMC\obj\Debug\ResolveAssemblyReference.cache
+D:\Project\amci\AutoAMC\AutoAMC\obj\Debug\AutoAMC.Form1.resources
+D:\Project\amci\AutoAMC\AutoAMC\obj\Debug\AutoAMC.Resources.resources
+D:\Project\amci\AutoAMC\AutoAMC\obj\Debug\AutoAMC.vbproj.GenerateResource.Cache
+C:\amc\AutoAMC\AutoAMC\obj\Debug\AutoAMC.exe
+C:\amc\AutoAMC\AutoAMC\obj\Debug\AutoAMC.xml
+C:\amc\AutoAMC\AutoAMC\obj\Debug\AutoAMC.pdb

@@ -1,0 +1,1224 @@
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[horun]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[horun]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[horun-x]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[horun-x]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[horun2]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[horun2]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[horun3]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[horun3]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[horunall1]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[horunall1]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[horunall2]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[horunall2]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[horunrace1]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[horunrace1]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[horunrace2]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[horunrace2]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[hoscan]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[hoscan]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[sp_Updatetblscan]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[sp_Updatetblscan]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[sp_horunall123]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[sp_horunall123]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[sp_run1]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[sp_run1]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[sp_run1a]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[sp_run1a]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[sp_run1max]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[sp_run1max]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[sp_run2]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[sp_run2]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[sp_run3]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[sp_run3]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[sp_run3x]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[sp_run3x]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[sp_runall]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[sp_runall]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[sp_runrep2]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[sp_runrep2]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[sp_runrep3]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[sp_runrep3]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[sp_runrep31]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[sp_runrep31]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[xhorunall123]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[xhorunall123]
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+CREATE PROCEDURE [dbo].[horun] AS IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblok')
+DROP TABLE Tblok
+SELECT   race.race as race , cost.cost_id AS cost , win_place.win_place_id as winplace ,substring(scan_id,2,1) as id_m , no_horse.no_horse_id as no_horse , pos.pos_id as pos  , 0 as chk
+into tblok
+FROM  tbldata  INNER JOIN cost ON tbldata.cost = cost.cost
+INNER JOIN  win_place on tbldata.wp = win_place.win_place
+INNER JOIN  race on tbldata.race = race.race
+INNER JOIN  no_horse on tbldata.no_horse = no_horse.no_horse
+INNER JOIN  pos on tbldata.scan_id+tbldata.pos = pos.pos
+ORDER BY race.race, cost.cost_id , win_place.win_place_id , no_horse.no_horse_id ,pos.pos_id
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblwin')
+drop table tblwin
+SELECT     no_horse, SUM(cost) AS Sumwin
+into tblwin 
+FROM         tblok
+WHERE     (winplace = N'Win')
+GROUP BY no_horse
+ORDER BY no_horse
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblplace')
+drop table tblplace
+SELECT     no_horse, SUM(cost) AS Sumplace
+into tblplace
+FROM         tblok
+WHERE     (winplace = N'Place')
+GROUP BY no_horse
+ORDER BY no_horse
+ 
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblall')
+drop table tblall
+SELECT     tblwin.no_horse, tblwin.Sumwin, tblplace.SumPlace ,  Sumwin + Sumplace as SumAll , (sumwin* 0.755)  as sec_win  , (sumplace * 0.815 ) as sec_place  , 0 as secwin   , 1  as secplace
+into tblall
+FROM         tblwin INNER JOIN
+                      tblplace ON tblwin.no_horse = tblplace.no_horse
+declare  @sumwin int,  @sumplace int 
+select @sumwin = sum(sumwin) , @sumplace = sum(sumplace) 
+from tblall
+update tblall set sec_win = @sumwin 
+update tblall set sec_place = @sumplace 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 1 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 1 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 2
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 2 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 3
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 3
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 4
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 4
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 5
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 5
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 6
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 6
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 7
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 7
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 8
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 8
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 9
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 9
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 10 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 10 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 11 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 11 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 12 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 12 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 13 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 13 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 14 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 14
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+CREATE PROCEDURE [dbo].[horun-x] AS IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblok')
+DROP TABLE Tblok
+SELECT   race.race as race , cost.cost_id AS cost , win_place.win_place_id as winplace ,substring(scan_id,2,1) as id_m , no_horse.no_horse_id as no_horse , pos.pos_id as pos  , 0 as chk
+into tblok
+FROM  tbldata  INNER JOIN cost ON tbldata.cost = cost.cost
+INNER JOIN  win_place on tbldata.wp = win_place.win_place
+INNER JOIN  race on tbldata.race = race.race
+INNER JOIN  no_horse on tbldata.no_horse = no_horse.no_horse
+INNER JOIN  pos on tbldata.scan_id+tbldata.pos = pos.pos
+ORDER BY race.race, cost.cost_id , win_place.win_place_id , no_horse.no_horse_id ,pos.pos_id
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblwin')
+drop table tblwin
+SELECT     no_horse, SUM(cost) AS Sumwin
+into tblwin 
+FROM         tblok
+WHERE     (winplace = N'Win')
+GROUP BY no_horse
+ORDER BY no_horse
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblplace')
+drop table tblplace
+SELECT     no_horse, SUM(cost) AS Sumplace
+into tblplace
+FROM         tblok
+WHERE     (winplace = N'Place')
+GROUP BY no_horse
+ORDER BY no_horse
+ 
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblall')
+drop table tblall
+SELECT     tblwin.no_horse, tblwin.Sumwin, tblplace.SumPlace ,  Sumwin + Sumplace as SumAll , (sumwin* 0.755)  as sec_win  , (sumplace * 0.815 ) as sec_place  , 0 as secwin   , 1  as secplace
+into tblall
+FROM         tblwin INNER JOIN
+                      tblplace ON tblwin.no_horse = tblplace.no_horse
+declare  @sumwin int,  @sumplace int 
+select @sumwin = sum(sumwin) , @sumplace = sum(sumplace) 
+from tblall
+print @sumwin
+print @sumplace
+update tblall set sec_win = @sumwin 
+update tblall set sec_place = @sumplace 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 1 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 1 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 2
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 2 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 3
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 3
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 4
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 4
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 5
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 5
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 6
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 6
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 7
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 7
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 8
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 8
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 9
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 9
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 10 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 10 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 11 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 11 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 12 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 12 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 13 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 13 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 14 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 14
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+CREATE PROCEDURE [dbo].[horun2] AS IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblwin')
+drop table tblwin
+SELECT     no_horse, SUM(cost) AS Sumwin
+into tblwin 
+FROM         tblok
+WHERE     (winplace = N'Win')
+GROUP BY no_horse
+ORDER BY no_horse
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblplace')
+drop table tblplace
+SELECT     no_horse, SUM(cost) AS Sumplace
+into tblplace
+FROM         tblok
+WHERE     (winplace = N'Place')
+GROUP BY no_horse
+ORDER BY no_horse
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+CREATE PROCEDURE [dbo].[horun3] AS IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblall')
+drop table tblall
+SELECT     tblwin.no_horse, tblwin.Sumwin, tblplace.SumPlace ,  Sumwin + Sumplace as SumAll , (sumwin* 0.755)  as sec_win  , (sumplace * 0.815 ) as sec_place  , 0 as secwin   , 1  as secplace
+into tblall
+FROM         tblwin INNER JOIN
+                      tblplace ON tblwin.no_horse = tblplace.no_horse
+declare  @swin int,  @splace int 
+declare  @cwin int,  @cplace int 
+declare  @calcwin varchar(40),@calcplace varchar(40)
+select @swin = sum(sumwin) , @splace = sum(sumplace) 
+from tblall
+update tblall set sec_win = @swin 
+update tblall set sec_place = @splace 
+update tblall  set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 1 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 1 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 2
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 2 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 3
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 3
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 4
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 4
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 5
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 5
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 6
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 6
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 7
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 7
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 8
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 8
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 9
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 9
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 10 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 10 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 11 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 11 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 12 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 12 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 13 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 13 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 14 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 14
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+CREATE PROCEDURE [DBO].[horunall1] AS truncate table tblscan
+insert into tblscan
+select data , race , scan_id , vaule , pos , no_horse , win_place , con_reject 
+from  tblscan1
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject from tblscan2
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject from tblscan3
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject from tblscan4
+SELECT   race.race as race , cost.cost_id AS cost , win_place.win_place_id as winplace ,substring(scan_id,2,1) as id_m , no_horse.no_horse_id as no_horse , pos.pos_id as pos  , 0 as chk
+into ##tblok
+FROM  tblscan  INNER JOIN cost ON tblscan.vaule = cost.cost
+INNER JOIN  win_place on tblscan.win_place = win_place.win_place
+INNER JOIN  race on tblscan.race = race.race
+INNER JOIN  no_horse on tblscan.no_horse = no_horse.no_horse
+INNER JOIN  pos on tblscan.scan_id+tblscan.pos = pos.pos
+ORDER BY race.race, cost.cost_id , win_place.win_place_id , no_horse.no_horse_id ,pos.pos_id
+truncate table tblok
+select * into tblok 
+from ##tblok
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+CREATE PROCEDURE [DBO].[horunall2] AS IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblwin')
+drop table tblwin
+SELECT     no_horse, SUM(cost) AS Sumwin
+into tblwin 
+FROM         tblok
+WHERE     (winplace = N'Win')
+GROUP BY no_horse
+ORDER BY no_horse
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblplace')
+drop table tblplace
+SELECT     no_horse, SUM(cost) AS Sumplace
+into tblplace
+FROM         tblok
+WHERE     (winplace = N'Place')
+GROUP BY no_horse
+ORDER BY no_horse
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblall')
+drop table tblall
+SELECT     tblwin.no_horse, tblwin.Sumwin, tblplace.SumPlace ,  Sumwin + Sumplace as SumAll , (sumwin* 0.755)  as sec_win  , (sumplace * 0.815 ) as sec_place  , 0 as secwin   , 1  as secplace
+into tblall
+FROM         tblwin INNER JOIN
+                      tblplace ON tblwin.no_horse = tblplace.no_horse
+declare  @sumwin int,  @sumplace int 
+select @sumwin = sum(sumwin) , @sumplace = sum(sumplace) 
+from tblall
+update tblall set sec_win = @sumwin 
+update tblall set sec_place = @sumplace 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 1 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 1 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 2
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 2 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 3
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 3
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 4
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 4
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 5
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 5
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 6
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 6
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 7
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 7
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 8
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 8
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 9
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 9
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 10 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 10 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 11 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 11 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 12 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 12 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 13 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 13 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 14 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 14
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+CREATE PROCEDURE [dbo].[horunrace1] AS truncate table tblscan
+insert into tblscan
+select data , race , scan_id , vaule , pos , no_horse , win_place , con_reject 
+from  tblscan11
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject from tblscan2
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject from tblscan3
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject from tblscan4
+truncate table tblok
+insert into tblok
+SELECT   race.race as race , cost.cost_id AS cost , win_place.win_place_id as winplace ,substring(scan_id,2,1) as id_m , no_horse.no_horse_id as no_horse , pos.pos_id as pos  , 0 as chk , null as room
+FROM  tblscan  INNER JOIN cost ON tblscan.vaule = cost.cost
+INNER JOIN  win_place on tblscan.win_place = win_place.win_place
+INNER JOIN  race on tblscan.race = race.race
+INNER JOIN  no_horse on tblscan.no_horse = no_horse.no_horse
+INNER JOIN  pos on tblscan.scan_id+tblscan.pos = pos.pos
+Where   con_reject = '11'
+ORDER BY race.race, cost.cost_id , win_place.win_place_id , no_horse.no_horse_id ,pos.pos_id
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+CREATE PROCEDURE [dbo].[horunrace2] AS truncate table tblscan
+insert into tblscan
+select data , race , scan_id , vaule , pos , no_horse , win_place , con_reject 
+from  tblscan11
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject from tblscan2
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject from tblscan3
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject from tblscan4
+truncate table tblok
+insert into tblok
+SELECT   race.race as race , cost.cost_id AS cost , win_place.win_place_id as winplace ,substring(scan_id,2,1) as id_m , no_horse.no_horse_id as no_horse , pos.pos_id as pos  , 0 as chk , null as room
+FROM  tblscan  INNER JOIN cost ON tblscan.vaule = cost.cost
+INNER JOIN  win_place on tblscan.win_place = win_place.win_place
+INNER JOIN  race on tblscan.race = race.race
+INNER JOIN  no_horse on tblscan.no_horse = no_horse.no_horse
+INNER JOIN  pos on tblscan.scan_id+tblscan.pos = pos.pos
+Where con_reject = '11'
+ORDER BY race.race, cost.cost_id , win_place.win_place_id , no_horse.no_horse_id ,pos.pos_id
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+CREATE PROCEDURE [dbo].[hoscan] AS IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblscan')
+DROP TABLE Tblscan
+select * 
+into tblscan
+from  tblscan1
+union all
+select *
+from tblscan2
+union all
+select *
+from tblscan3
+union all
+select *
+from tblscan4
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tbldata')
+DROP TABLE Tbldata
+SELECT  substring([tblscan].[Data],2,2) AS Race, substring([tblscan].[Data],4,2) AS Scan_id, substring([tblscan].[Data],6,2) AS cost, substring([tblscan].[Data],8,2) AS pos, substring([tblscan].[Data],10,2) AS no_horse, substring([tblscan].[Data],12,2) AS wp, substring([tblscan].[Data],14,2) AS status INTO tbldata
+FROM tblscan;
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS ON 
+GO
+
+CREATE PROCEDURE sp_Updatetblscan
+	(
+	@data		nvarchar(20),
+	@race		nvarchar(10),
+	@scan_id		nvarchar(10),
+	@vaule		nvarchar(10),
+	@pos		nvarchar(10),
+	@no_horse		nvarchar(10),
+	@win_place		nvarchar(10),
+	@con_reject		nvarchar(10) = NULL
+	)
+AS
+	SET NOCOUNT ON
+	IF @con_reject IS NULL
+		-- record does not exist do insert
+		INSERT INTO tblscan
+			(data, race, scan_id, vaule, pos, no_horse, win_place)
+		VALUES (@data, @race, @scan_id, @vaule, @pos, @no_horse, @win_place)
+	ELSE
+		-- record exists do update
+		UPDATE tblscan
+		SET data = @data, race = @race, scan_id = @scan_id, vaule = @vaule, pos = @pos, no_horse = @no_horse
+			, win_place = @win_place
+		WHERE con_reject = @con_reject
+	IF @@ERROR <> 0
+		RETURN @@ERROR
+	Else
+		RETURN 0
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+CREATE PROCEDURE [dbo].[sp_horunall123] AS
+truncate table tblscan
+insert into tblscan
+select data , race , scan_id , vaule , pos , no_horse , win_place , con_reject 
+from  tblscan1
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject from tblscan2
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject from tblscan3
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject from tblscan4
+delete tblok
+insert into tblok
+SELECT   race.race as race , cost.cost_id AS cost , win_place.win_place_id as winplace ,substring(scan_id,2,1) as id_m , no_horse.no_horse_id as no_horse , pos.pos_id as pos  , 0 as chk , room.room_id as room
+FROM  tblscan  INNER JOIN cost ON tblscan.vaule = cost.cost
+INNER JOIN  win_place on tblscan.win_place = win_place.win_place
+INNER JOIN  race on tblscan.race = race.race
+INNER JOIN  no_horse on tblscan.no_horse = no_horse.no_horse
+INNER JOIN  pos on tblscan.scan_id+tblscan.pos = pos.pos
+INNER JOIN  room on tblscan.scan_id+tblscan.pos = room.room
+Where con_reject = '11'
+ORDER BY race.race, cost.cost_id , win_place.win_place_id , no_horse.no_horse_id ,pos.pos_id
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblwin')
+drop table tblwin
+SELECT     no_horse, SUM(cost) AS Sumwin
+into tblwin 
+FROM         tblok
+WHERE     (winplace = N'Win')
+GROUP BY no_horse
+ORDER BY no_horse
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblplace')
+drop table tblplace
+SELECT     no_horse, SUM(cost) AS Sumplace
+into tblplace
+FROM         tblok
+WHERE     (winplace = N'Place')
+GROUP BY no_horse
+ORDER BY no_horse
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblall')
+drop table tblall
+SELECT     tblwin.no_horse, tblwin.Sumwin, tblplace.SumPlace ,  Sumwin + Sumplace as SumAll , (sumwin* 0.755)  as sec_win  , (sumplace * 0.815 ) as sec_place  , 0 as secwin   , 1  as secplace
+into tblall
+FROM         tblwin INNER JOIN
+                      tblplace ON tblwin.no_horse = tblplace.no_horse
+declare  @sumwin int,  @sumplace int 
+select @sumwin = sum(sumwin) , @sumplace = sum(sumplace) 
+from tblall
+update tblall set sec_win = @sumwin 
+update tblall set sec_place = @sumplace 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 1 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 1 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 2
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 2 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 3
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 3
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 4
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 4
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 5
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 5
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 6
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 6
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 7
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 7
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 8
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 8
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 9
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 9
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 10 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 10 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 11 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 11 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 12 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 12 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 13 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 13 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 14 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 14 
+truncate table tblpos
+insert into tblpos
+select  pos ,winplace , cost , no_horse as num , 0 as n1 , 0 as n2 , 0 as n3 , 0 as n4 ,
+0 as n5 , 0 as n6 , 0  as n7 , 0 as n8 , 0 as n9 ,
+0 as n10 , 0 as n11 , 0 as n12 , 0 as n13 , 0 as n14 , 1 as chk , room as room  
+from tblok
+update tblpos set n1 = 1 where num = 1
+update tblpos set n2 = 1 where num = 2
+update tblpos set n3 = 1 where num = 3
+update tblpos set n4 = 1 where num = 4
+update tblpos set n5 = 1 where num = 5
+update tblpos set n6 = 1 where num = 6
+update tblpos set n7 = 1 where num = 7
+update tblpos set n8 = 1 where num = 8
+update tblpos set n9 = 1 where num = 9
+update tblpos set n10 = 1 where num = 10
+update tblpos set n11 = 1 where num = 11
+update tblpos set n12 = 1 where num = 12
+update tblpos set n13 = 1 where num = 13
+update tblpos set n14 = 1 where num = 14
+delete tblrep1
+insert into tblrep1
+SELECT     pos AS POS, winplace AS wp, sum(n1+n2+n3+n4+n5+n6+n7+n8+n9+n10+n11+n12+n13+n14) as allsum ,sum(n1) AS no_1, SUM(n2) AS no_2, SUM(n3) AS no_3, SUM(n4) AS no_4, SUM(n5) AS no_5, SUM(n6) AS no_6, 
+                      SUM(n7) AS no_7, SUM(n8) AS no_8, SUM(n9) AS no_9, SUM(n10) AS no_10, SUM(n11) AS no_11, SUM(n12) AS no_12, SUM(n13) AS no_13, 
+                      sum(n14) AS no_14 , cost as cost , room as room
+FROM         tblpos
+GROUP BY pos, winplace ,cost ,room
+ORDER BY pos
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+CREATE PROCEDURE [dbo].[sp_run1] AS
+truncate table tblscan
+insert into tblscan
+select data , race , scan_id , vaule , pos , no_horse , win_place , con_reject,date3  from  tblscan1
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject ,date3 from tblscan2
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject , date3 from tblscan3
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject ,date3 from tblscan4
+truncate table tblok
+insert into tblok
+SELECT   race.race as race , cost.cost_id AS cost , win_place.win_place_id as winplace ,substring(scan_id,2,1) as id_m , no_horse.no_horse_id as no_horse , pos.pos_id as pos  , 0 as chk , room.room_id as room
+FROM  tblscan  INNER JOIN cost ON tblscan.vaule = cost.cost
+INNER JOIN  win_place on tblscan.win_place = win_place.win_place
+INNER JOIN  race on tblscan.race = race.race
+INNER JOIN  no_horse on tblscan.no_horse = no_horse.no_horse
+INNER JOIN  pos on tblscan.scan_id+tblscan.pos = pos.pos
+INNER JOIN  room on tblscan.scan_id+tblscan.pos = room.room
+Where con_reject = '11'
+ORDER BY race.race, cost.cost_id , win_place.win_place_id , no_horse.no_horse_id ,pos.pos_id
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS ON 
+GO
+
+CREATE PROCEDURE [dbo].[sp_run1a] AS
+truncate table tblscan
+insert into tblscan
+select data , race , scan_id , vaule , pos , no_horse , win_place , con_reject 
+from  tblscan1
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject from tblscan2
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject from tblscan3
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject from tblscan4
+
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblok')
+drop table tblok
+
+SELECT   race.race as race , cost.cost_id AS cost , win_place.win_place_id as winplace ,substring(scan_id,2,1) as id_m , no_horse.no_horse_id as no_horse , pos.pos_id as pos  , 0 as chk , room.room_id as room
+into tblok
+FROM  tblscan  INNER JOIN cost ON tblscan.vaule = cost.cost
+INNER JOIN  win_place on tblscan.win_place = win_place.win_place
+INNER JOIN  race on tblscan.race = race.race
+INNER JOIN  no_horse on tblscan.no_horse = no_horse.no_horse
+INNER JOIN  pos on tblscan.scan_id+tblscan.pos = pos.pos
+INNER JOIN  room on tblscan.scan_id+tblscan.pos = room.room
+Where con_reject = '11' 
+ORDER BY race.race, cost.cost_id , win_place.win_place_id , no_horse.no_horse_id ,pos.pos_id
+
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS ON 
+GO
+
+CREATE PROCEDURE [dbo].[sp_run1max] AS
+truncate table tblscan
+insert into tblscan
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject,date3 from tblscan1
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject ,date3 from tblscan2
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject , date3 from tblscan3
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject , date3 from tblscan4
+
+truncate table tblok
+insert into tblok
+SELECT   race.race as race , cost.cost_id AS cost , win_place.win_place_id as winplace ,substring(scan_id,2,1) as id_m , no_horse.no_horse_id as no_horse , pos.pos_id as pos  , 0 as chk , room.room_id as room
+FROM  tblscan  INNER JOIN cost ON tblscan.vaule = cost.cost
+INNER JOIN  win_place on tblscan.win_place = win_place.win_place
+INNER JOIN  race on tblscan.race = race.race
+INNER JOIN  no_horse on tblscan.no_horse = no_horse.no_horse
+INNER JOIN  pos on tblscan.scan_id+tblscan.pos = pos.pos
+INNER JOIN  room on tblscan.scan_id+tblscan.pos = room.room
+
+Where con_reject = '11'
+ORDER BY race.race, cost.cost_id , win_place.win_place_id , no_horse.no_horse_id ,pos.pos_id
+
+
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS ON 
+GO
+
+CREATE PROCEDURE [dbo].[sp_run2] AS 
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblwin')
+drop table tblwin
+
+SELECT   no_horse  , SUM(cost) AS Sumwin  
+into tblwin
+FROM   tblok
+WHERE     (winplace = N'Win')
+GROUP BY no_horse
+ORDER BY no_horse
+
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblplace')
+drop table tblplace
+
+SELECT     no_horse, SUM(cost) AS Sumplace
+into tblplace
+FROM         tblok
+WHERE     (winplace = N'Place')
+GROUP BY no_horse
+ORDER BY no_horse
+
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblall')
+drop table tblall
+
+
+SELECT     tblwin.no_horse, tblwin.Sumwin, tblplace.SumPlace ,  Sumwin + Sumplace as SumAll , (sumwin* 0.755)  as sec_win  , (sumplace * 0.815 ) as sec_place  , 0 as secwin   , 1  as secplace
+into tblall
+FROM         tblwin INNER JOIN
+                      tblplace ON tblwin.no_horse = tblplace.no_horse
+
+
+declare  @sumwin int,  @sumplace int 
+select @sumwin = sum(sumwin) , @sumplace = sum(sumplace) 
+from tblall
+
+
+update tblall set sec_win = @sumwin 
+update tblall set sec_place = @sumplace 
+
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 1 
+update tblall set secplace = ((sec_place*0.805)/(sumplace/10))/3 where no_horse = 1 
+
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 2
+update tblall set secplace = ((sec_place*0.805)/(sumplace/10))/3 where no_horse = 2 
+
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 3
+update tblall set secplace = ((sec_place*0.805)/(sumplace/10))/3 where no_horse = 3
+
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 4
+update tblall set secplace = ((sec_place*0.805)/(sumplace/10))/3 where no_horse = 4
+
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 5
+update tblall set secplace = ((sec_place*0.805)/(sumplace/10))/3 where no_horse = 5
+
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 6
+update tblall set secplace = ((sec_place*0.805)/(sumplace/10))/3 where no_horse = 6
+
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 7
+update tblall set secplace = ((sec_place*0.805)/(sumplace/10))/3 where no_horse = 7
+
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 8
+update tblall set secplace = ((sec_place*0.805)/(sumplace/10))/3 where no_horse = 8
+
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 9
+update tblall set secplace = ((sec_place*0.805)/(sumplace/10))/3 where no_horse = 9
+
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 10 
+update tblall set secplace = ((sec_place*0.805)/(sumplace/10))/3 where no_horse = 10 
+
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 11 
+update tblall set secplace = ((sec_place*0.805)/(sumplace/10))/3 where no_horse = 11 
+
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 12 
+update tblall set secplace = ((sec_place*0.805)/(sumplace/10))/3 where no_horse = 12 
+
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 13 
+update tblall set secplace = ((sec_place*0.805)/(sumplace/10))/3 where no_horse = 13 
+
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 14 
+update tblall set secplace = ((sec_place*0.805)/(sumplace/10))/3 where no_horse = 14 
+
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS ON 
+GO
+
+CREATE PROCEDURE [dbo].[sp_run3] AS
+drop table tblpos
+select  race,pos ,winplace , cost , no_horse as num , 0 as n1 , 0 as n2 , 0 as n3 , 0 as n4 ,
+0 as n5 , 0 as n6 , 0  as n7 , 0 as n8 , 0 as n9 ,
+0 as n10 , 0 as n11 , 0 as n12 , 0 as n13 , 0 as n14 , 1 as chk  , room as room
+into tblpos
+from tblok
+
+update tblpos set n1 = 1 where num = 1
+update tblpos set n2 = 1 where num = 2
+update tblpos set n3 = 1 where num = 3
+update tblpos set n4 = 1 where num = 4
+update tblpos set n5 = 1 where num = 5
+update tblpos set n6 = 1 where num = 6
+update tblpos set n7 = 1 where num = 7
+update tblpos set n8 = 1 where num = 8
+update tblpos set n9 = 1 where num = 9
+update tblpos set n10 = 1 where num = 10
+update tblpos set n11 = 1 where num = 11
+update tblpos set n12 = 1 where num = 12
+update tblpos set n13 = 1 where num = 13
+update tblpos set n14 = 1 where num = 14
+
+truncate table tblrep1
+insert into tblrep1
+SELECT     pos AS POS, winplace AS wp, sum(n1+n2+n3+n4+n5+n6+n7+n8+n9+n10+n11+n12+n13+n14) as allsum ,sum(n1) AS no_1, SUM(n2) AS no_2, SUM(n3) AS no_3, SUM(n4) AS no_4, SUM(n5) AS no_5, SUM(n6) AS no_6, 
+                      SUM(n7) AS no_7, SUM(n8) AS no_8, SUM(n9) AS no_9, SUM(n10) AS no_10, SUM(n11) AS no_11, SUM(n12) AS no_12, SUM(n13) AS no_13, 
+                      sum(n14) AS no_14 , cost as cost , room as room
+
+FROM         tblpos
+GROUP BY pos, winplace ,cost ,room
+ORDER BY pos 
+
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS ON 
+GO
+
+CREATE PROCEDURE [dbo].[sp_run3x] AS
+drop table tblpos
+select  race,pos ,winplace , cost , no_horse as num , 0 as n1 , 0 as n2 , 0 as n3 , 0 as n4 ,
+0 as n5 , 0 as n6 , 0  as n7 , 0 as n8 , 0 as n9 ,
+0 as n10 , 0 as n11 , 0 as n12 , 0 as n13 , 0 as n14 , 1 as chk  , room as room
+into tblpos
+from tblok
+
+update tblpos set n1 = 1 where num = 1
+update tblpos set n2 = 1 where num = 2
+update tblpos set n3 = 1 where num = 3
+update tblpos set n4 = 1 where num = 4
+update tblpos set n5 = 1 where num = 5
+update tblpos set n6 = 1 where num = 6
+update tblpos set n7 = 1 where num = 7
+update tblpos set n8 = 1 where num = 8
+update tblpos set n9 = 1 where num = 9
+update tblpos set n10 = 1 where num = 10
+update tblpos set n11 = 1 where num = 11
+update tblpos set n12 = 1 where num = 12
+update tblpos set n13 = 1 where num = 13
+update tblpos set n14 = 1 where num = 14
+
+select * from tblpos
+truncate table tblrep1
+insert into tblrep1
+SELECT     pos AS POS, winplace AS wp, sum(n1+n2+n3+n4+n5+n6+n7+n8+n9+n10+n11+n12+n13+n14) as allsum ,sum(n1) AS no_1, SUM(n2) AS no_2, SUM(n3) AS no_3, SUM(n4) AS no_4, SUM(n5) AS no_5, SUM(n6) AS no_6, 
+                      SUM(n7) AS no_7, SUM(n8) AS no_8, SUM(n9) AS no_9, SUM(n10) AS no_10, SUM(n11) AS no_11, SUM(n12) AS no_12, SUM(n13) AS no_13, 
+                      sum(n14) AS no_14 , cost as cost , room as room
+
+FROM         tblpos
+GROUP BY pos, winplace ,cost ,room
+ORDER BY pos 
+
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS ON 
+GO
+
+CREATE PROCEDURE [dbo].[sp_runall] AS 
+exec sp_run1  
+exec sp_run2
+exec sp_run3
+
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS ON 
+GO
+
+CREATE PROCEDURE [dbo].[sp_runrep2] AS
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblrep2')
+drop table tblrep2
+select pos ID_เครื่อง ,isnull(wp,'รวม') as ประเภท, sum(allsum) as รวม  ,   
+  sum(no_1) as เบอร์1  ,
+  sum(no_2) as เบอร์2
+ ,sum(no_3) as เบอร์3
+ ,sum(no_4) as เบอร์4 
+ ,sum(no_5) as เบอร์5 
+ ,sum(no_6) as เบอร์6
+ ,sum(no_7) as เบอร์7
+ ,sum(no_8) as เบอร์8
+ ,sum(no_9) as เบอร์9
+ ,sum(no_10) as เบอร์10
+ ,sum(no_11) as เบอร์11
+ ,sum(no_12) as เบอร์12
+ ,sum(no_13) as เบอร์13
+ ,sum(no_14) as เบอร์14
+into tblrep2
+from tblrep1
+group by pos,wp
+with cube
+
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS ON 
+GO
+
+CREATE PROCEDURE [dbo].[sp_runrep3] AS
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblrep3')
+drop table tblrep3
+select pos ID_เครื่อง ,isnull(wp,'รวม') as ประเภท, sum(allsum*cost) as รวม  ,   
+  sum(no_1*cost) as เบอร์1  ,
+  sum(no_2*cost) as เบอร์2
+ ,sum(no_3*cost) as เบอร์3
+ ,sum(no_4*cost) as เบอร์4 
+ ,sum(no_5*cost) as เบอร์5 
+ ,sum(no_6*cost) as เบอร์6
+ ,sum(no_7*cost) as เบอร์7
+ ,sum(no_8*cost) as เบอร์8
+ ,sum(no_9*cost) as เบอร์9
+ ,sum(no_10*cost) as เบอร์10
+ ,sum(no_11*cost) as เบอร์11
+ ,sum(no_12*cost) as เบอร์12
+ ,sum(no_13*cost) as เบอร์13
+ ,sum(no_14*cost) as เบอร์14
+into tblrep3
+from tblrep1
+group by pos,wp
+with cube
+
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS ON 
+GO
+
+CREATE PROCEDURE [dbo].[sp_runrep31] AS
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblrep3')
+drop table tblrep3
+select pos ID_เครื่อง , isnull(wp,'Summ:')as WinPlace , cost  ราคา  ,sum(allsum*cost) as sum  ,sum(allsum) as tsum 
+into tblrep3
+from tblrep1
+where room ='a'
+group by pos,wp ,cost 
+with rollup
+
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+CREATE PROCEDURE [dbo].[xhorunall123] AS
+truncate table tblscan
+insert into tblscan
+select data , race , scan_id , vaule , pos , no_horse , win_place , con_reject 
+from  tblscan11
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject from tblscan22
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject from tblscan33
+union all
+select data , race , scan_id ,vaule ,pos , no_horse ,win_place , con_reject from tblscan44
+truncate table tblok
+insert into tblok
+SELECT   race.race as race , cost.cost_id AS cost , win_place.win_place_id as winplace ,substring(scan_id,2,1) as id_m , no_horse.no_horse_id as no_horse , pos.pos_id as pos  , 0 as chk , room.room_id as room
+FROM  tblscan  INNER JOIN cost ON tblscan.vaule = cost.cost
+INNER JOIN  win_place on tblscan.win_place = win_place.win_place
+INNER JOIN  race on tblscan.race = race.race
+INNER JOIN  no_horse on tblscan.no_horse = no_horse.no_horse
+INNER JOIN  pos on tblscan.scan_id+tblscan.pos = pos.pos
+INNER JOIN  room on tblscan.scan_id+tblscan.pos = room.room
+Where con_reject = '11'
+ORDER BY race.race, cost.cost_id , win_place.win_place_id , no_horse.no_horse_id ,pos.pos_id
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblwin')
+drop table tblwin
+SELECT     no_horse, SUM(cost) AS Sumwin
+into tblwin 
+FROM         tblok
+WHERE     (winplace = N'Win')
+GROUP BY no_horse
+ORDER BY no_horse
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblplace')
+drop table tblplace
+SELECT     no_horse, SUM(cost) AS Sumplace
+into tblplace
+FROM         tblok
+WHERE     (winplace = N'Place')
+GROUP BY no_horse
+ORDER BY no_horse
+IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_NAME = 'Tblall')
+drop table tblall
+SELECT     tblwin.no_horse, tblwin.Sumwin, tblplace.SumPlace ,  Sumwin + Sumplace as SumAll , (sumwin* 0.755)  as sec_win  , (sumplace * 0.815 ) as sec_place  , 0 as secwin   , 1  as secplace
+into tblall
+FROM         tblwin INNER JOIN
+                      tblplace ON tblwin.no_horse = tblplace.no_horse
+declare  @sumwin int,  @sumplace int 
+select @sumwin = sum(sumwin) , @sumplace = sum(sumplace) 
+from tblall
+update tblall set sec_win = @sumwin 
+update tblall set sec_place = @sumplace 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 1 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 1 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 2
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 2 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 3
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 3
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 4
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 4
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 5
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 5
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 6
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 6
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 7
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 7
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 8
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 8
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 9
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 9
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 10 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 10 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 11 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 11 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 12 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 12 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 13 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 13 
+update tblall set secwin = (sec_win*0.755)/(sumwin/10) where no_horse = 14 
+update tblall set secplace = ((sec_place*0.815)/(sumplace/10))/3 where no_horse = 14 
+truncate table tblpos
+insert into tblpos
+select  pos ,winplace , cost , no_horse as num , 0 as n1 , 0 as n2 , 0 as n3 , 0 as n4 ,
+0 as n5 , 0 as n6 , 0  as n7 , 0 as n8 , 0 as n9 ,
+0 as n10 , 0 as n11 , 0 as n12 , 0 as n13 , 0 as n14 , 1 as chk , room as room  
+from tblok
+update tblpos set n1 = 1 where num = 1
+update tblpos set n2 = 1 where num = 2
+update tblpos set n3 = 1 where num = 3
+update tblpos set n4 = 1 where num = 4
+update tblpos set n5 = 1 where num = 5
+update tblpos set n6 = 1 where num = 6
+update tblpos set n7 = 1 where num = 7
+update tblpos set n8 = 1 where num = 8
+update tblpos set n9 = 1 where num = 9
+update tblpos set n10 = 1 where num = 10
+update tblpos set n11 = 1 where num = 11
+update tblpos set n12 = 1 where num = 12
+update tblpos set n13 = 1 where num = 13
+update tblpos set n14 = 1 where num = 14
+truncate table tblrep1
+insert into tblrep1
+SELECT     pos AS POS, winplace AS wp, sum(n1+n2+n3+n4+n5+n6+n7+n8+n9+n10+n11+n12+n13+n14) as allsum ,sum(n1) AS no_1, SUM(n2) AS no_2, SUM(n3) AS no_3, SUM(n4) AS no_4, SUM(n5) AS no_5, SUM(n6) AS no_6, 
+                      SUM(n7) AS no_7, SUM(n8) AS no_8, SUM(n9) AS no_9, SUM(n10) AS no_10, SUM(n11) AS no_11, SUM(n12) AS no_12, SUM(n13) AS no_13, 
+                      sum(n14) AS no_14 , cost as cost , room as room
+FROM         tblpos
+GROUP BY pos, winplace ,cost ,room
+ORDER BY pos
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+

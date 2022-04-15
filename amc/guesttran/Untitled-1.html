@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Untitled Document</title>
+</head>
+
+<body><gauge>
+
+
+	<!-- small gauge -->
+	<circle x='240' y='160' radius='48' fill_color='88ff66' fill_alpha='80' line_thickness='8' line_alpha='30' />
+	<circle x='240' y='160' radius='45' start='37' end='170' fill_color='000000' fill_alpha='75' />
+	<circle x='240' y='160' radius='42' fill_color='88ff66' fill_alpha='90' />
+	<circle x='240' y='160' radius='20' fill_color='000000' fill_alpha='25' />
+	<text x='256' y='131' width='100' size='11' color='000000' alpha='75' align='left'>H</text>
+	<text x='241' y='182' width='100' size='11' color='000000' alpha='75' align='left'>C</text>
+	
+	<?php 
+	//this is a PHP function that generates the XML to to draw radial ticks
+	//any script language can be used to generate the XML code like this
+	RadialTicks( 240, 160, 37, 8, 40, 168, 5, 4, "333333" );
+	?>
+	
+	<rotate x='240' y='160' start='80' span='0' step='1' shake_frequency='95' shake_span='10' shadow_alpha='30' shadow_x_offset='2' shadow_y_offset='2' >
+		<rect x='238' y='130' width='4' height='50' fill_color='ff4400' fill_alpha='90' line_alpha='0' />
+	</rotate>
+	
+	
+	
+	
+	
+	<!-- flashing light -->
+	<circle x='270' y='145' radius='3' fill_color='440000' fill_alpha='80' line_thickness='1' line_alpha='10' />
+	<rotate x='270' y='300' start='0' span='360000' step='120' shake_frequency='0' shake_span='0' shadow_alpha='0'>
+		<circle x='270' y='145' radius='3' fill_color='FF5500' fill_alpha='100' line_thickness='0' line_alpha='10' />
+	</rotate>
+	
+	
+	
+	
+	<!-- large gauge -->
+	<circle x='145' y='130' radius='110' fill_color='555555' fill_alpha='100' line_thickness='6' line_color='333333' line_alpha='90' />
+	<circle x='145' y='130' radius='100' start='240' end='480' fill_color='99bbff' fill_alpha='90' line_thickness='4' line_alpha='20' />
+	<circle x='145' y='130' radius='94' start='50' end='115' fill_color='FF4400' fill_alpha='100' />
+	<circle x='145' y='130' radius='80' start='240' end='480' fill_color='99bbff' fill_alpha='80' />
+	<circle x='145' y='130' radius='40' fill_color='333333' fill_alpha='100' line_alpha='0' />
+	<circle x='145' y='130' radius='90' start='130' end='230' fill_color='333333' fill_alpha='100' line_alpha='0' />
+	
+	<?php
+	//these are PHP functions that generate the XML to to draw radial ticks and numbers
+	//any script language can be used to generate the XML code like this
+	RadialTicks( 145, 130, 80, 15, 250, 387, 6, 8, "000000" );
+	RadialTicks( 145, 130, 80, 15, 263, 400, 6, 4, "000000" );
+	RadialTicks( 145, 130, 80, 15, 55, 110, 3, 4, "99bbff" );
+	RadialNumbers( 145, 130, 80, 0, 8, 245, 465, 9, 14, "444444" );
+	?>
+	
+	<rotate x='145' y='130' start='0' span='20' step='1' shake_frequency='100' shake_span='2' shadow_alpha='15'>
+		<rect x='143' y='40' width='4' height='100' fill_color='ffffff' fill_alpha='90' line_alpha='0' />
+	</rotate>
+	
+	<circle x='145' y='130' radius='30' fill_color='111111' fill_alpha='100' line_thickness='5' line_alpha='50' />
+	<text x='95' y='180' width='100' size='14' color='ffffff' alpha='70' align='center'>x1000 r/min</text>
+	
+	
+	
+	
+	<!-- background elements -->
+	<text x='-10' y='250' width='500' size='24' color='000000' alpha='20' align='left'>||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||</text>
+	<text x='400' y='0' width='300' size='49' color='ffffff' alpha='15' align='left' rotation='90'>dashboard</text>
+	
+	
+	
+	<?php
+	//====================================
+	//PHP function that generates the XML code to draw radial ticks
+	function RadialTicks ( $x_center, $y_center, $radius,  $length, $start_angle, $end_angle, $ticks_count, $thickness, $color ){
+		
+		for ( $i=$start_angle; $i<=$end_angle; $i+=($end_angle-$start_angle)/($ticks_count-1) ){
+			echo "	<line x1='".($x_center+sin(deg2rad($i))*$radius)."' y1='".($y_center-cos(deg2rad($i))*$radius)."' x2='".($x_center+sin(deg2rad($i))*($radius+$length))."' y2='".($y_center-cos(deg2rad($i))*($radius+$length))."' thickness='".$thickness."' color='".$color."' />";
+		
+		}
+	}
+	//====================================
+	//PHP function that generates the XML code to draw radial numbers
+	function RadialNumbers ( $x_center, $y_center, $radius,  $start_number, $end_number, $start_angle, $end_angle, $ticks_count, $font_size, $color ){
+		
+		$number=$start_number;
+		
+		for( $i=$start_angle; $i<=$end_angle; $i+=($end_angle-$start_angle)/($ticks_count-1) ){
+			echo "	<text x='".($x_center+sin(deg2rad($i))*$radius)."' y='".($y_center-cos(deg2rad($i))*$radius)."' width='200' size='".$font_size."' color='".$color."' align='left' rotation='".$i."'>".$number."</text>";
+			$number += ($end_number-$start_number)/($ticks_count-1);
+		
+		}
+	}
+	//====================================
+	?>
+	
+	
+</gauge>
+</body>
+</html>

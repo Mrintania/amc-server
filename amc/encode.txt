@@ -1,0 +1,12 @@
+            If CheckBox1.Checked = True Then
+                Dim encryptedpassword As New MemoryStream()
+                Dim rc2 As New RC2CryptoServiceProvider()
+                rc2.Key = Encoding.ASCII.GetBytes(txtcode.Text)
+                Dim iv() As Byte = {11, 12, 33, 50, 78, 25, 72, 84}
+                rc2.IV = iv
+                Dim myencryptor As ICryptoTransform = rc2.CreateEncryptor()
+                Dim pwd() As Byte = Encoding.ASCII.GetBytes(txtstory.Text)
+                Dim mycryptorstream As New CryptoStream(encryptedpassword, myencryptor, CryptoStreamMode.Write)
+                mycryptorstream.Write(pwd, 0, pwd.Length)
+                mycryptorstream.Close()
+            End If
